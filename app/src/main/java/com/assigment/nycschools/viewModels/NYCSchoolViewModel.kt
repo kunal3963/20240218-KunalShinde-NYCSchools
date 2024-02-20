@@ -24,9 +24,9 @@ class NYCSchoolViewModel @Inject constructor(
 
     var listOfSchools: List<Schools> by mutableStateOf(listOf())
     var schoolInfo by mutableStateOf(SchoolInfo("", "", "", "", ""))
-    var progress by mutableStateOf(true)
+    private var progress by mutableStateOf(true)
 
-    var exception = CoroutineExceptionHandler { _, e ->
+    private var exception = CoroutineExceptionHandler { _, e ->
         throw Exception(e)
     }
 
@@ -35,20 +35,29 @@ class NYCSchoolViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO + exception) {
             val allSchools = repository.getAllSchools()
             listOfSchools = allSchools
-            progress = false
+            setProgressBar(false)
         }
     }
+
+    fun setProgressBar(flag: Boolean) {
+        this.progress = flag
+    }
+
+    fun getProgressBar() = this.progress
 
     //get only school info using its dbn
     fun getSchoolInfo(dbn: String) {
         viewModelScope.launch(Dispatchers.IO + exception) {
+            //progress = true
             val listSchoolInfo: List<SchoolInfo> = repository.getSchoolInfo(dbn)
             if (listSchoolInfo.size > 0) {
                 schoolInfo = listSchoolInfo[0]
                 Log.d("Kunal", " called again")
+            } else {
+                schoolInfo = SchoolInfo("", "", "", "", "")
             }
             Log.d("Kunal", " called again 1")
-            progress = false
+            setProgressBar(false)
         }
     }
 }

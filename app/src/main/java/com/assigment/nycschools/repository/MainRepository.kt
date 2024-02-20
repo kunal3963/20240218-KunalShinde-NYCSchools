@@ -6,7 +6,6 @@ import com.assigment.nycschools.network.ApiService
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-
 //Following MVVM patter to get into from REST api
 class MainRepository @Inject constructor(
     private val apiService: ApiService
